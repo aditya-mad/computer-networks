@@ -46,9 +46,8 @@ int main()
 
 	cout << "Remainder is - ";
 	for (int i = sizeofdata; i < sizeofdata + sizeofpoly - 1; i++)
-	{
 		cout << finaldata[i];
-	}
+
 	cout << endl;
 }
 
@@ -57,9 +56,7 @@ void performdivision(vector<int> &data, vector<int> &divisor, int &sizeofdata, i
 	for (int i = 0; i < sizeofdata;)
 	{
 		for (int j = 0; j < sizeofpoly; j++)
-		{
 			data[i + j] ^= divisor[j];
-		}
 
 		while (data[i] == 0)
 			i++;
