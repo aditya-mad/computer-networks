@@ -1,41 +1,28 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-int Bellman_Ford(vector<vector<int>> &G, int V, int E, vector<pair<int, int>> &edge)
+void Bellman_Ford(vector<vector<int>> &G, int V, int E, vector<pair<int, int>> &edge, vector<vector<int>> &ans)
 {
-    int i, u, v, k, S, flag = 1;
-    vector<int> distance(V, 1000);
-
-    cout << "\nEnter source : ";
-    cin >> S;
-
-    distance[S - 1] = 0;
-
-    for (i = 0; i < V - 1; i++)
+    for (int p = 0; p < V; p++)
     {
-        for (k = 0; k < E; k++)
+        int i, u, v, k, S;
+        vector<int> distance(V, 1000);
+        S = p;
+        distance[S] = 0;
+
+        for (i = 0; i < V - 1; i++)
         {
-            u = edge[k].first;
-            v = edge[k].second;
-            if (distance[u] + G[u][v] < distance[v])
-                distance[v] = distance[u] + G[u][v];
+            for (k = 0; k < E; k++)
+            {
+                u = edge[k].first;
+                v = edge[k].second;
+                if (distance[u] + G[u][v] < distance[v])
+                    distance[v] = distance[u] + G[u][v];
+            }
         }
-    }
-
-    for (k = 0; k < E; k++)
-    {
-        u = edge[k].first;
-        v = edge[k].second;
-        if (distance[u] + G[u][v] < distance[v])
-            flag = 0;
-    }
-
-    if (flag)
         for (i = 0; i < V; i++)
-            cout << S << " - " << i + 1 << " : " << distance[i] << endl;
-
-    return flag;
+            ans[S][i] = distance[i];
+    }
 }
 
 int main()
@@ -43,20 +30,32 @@ int main()
     int V, i, j, k = 0;
     cout << "Enter no. of vertices: ";
     cin >> V;
-
-    vector<vector<int>> graph(V, vector<int>(V, 0));
+    vector<vector<int>> ans(V, vector<int>(V, 0));
+    vector<vector<int>> G(V, vector<int>(V, 0));
     vector<pair<int, int>> edge;
 
-    for (int i = 0; i < V; i++)
+    cout << "Enter graph in matrix form:\n";
+    for (i = 0; i < V; i++)
     {
-        for (int j = 0; j < V; j++)
+        for (j = 0; j < V; j++)
         {
-            graph[i][j] = rand() % 8;
+            cin >> G[i][j];
+            if (G[i][j] != 0)
+                edge.emplace_back(i, j);
         }
     }
 
-    if (Bellman_Ford(graph, V, edge.size(), edge))
-        cout << "\nNo negative weight cycle exists\n";
+    Bellman_Ford(G, V, edge.size(), edge, ans);
+
+    cout << "Final Graph is" << endl;
+    for (auto x : ans)
+    {
+        for (int y : x)
+        {
+            cout << y << " ";
+        }
+        cout << endl;
+    }
 
     return 0;
 }
